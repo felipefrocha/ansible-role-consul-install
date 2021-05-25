@@ -1,0 +1,38 @@
+---
+- name: Install Consul
+  block:
+    - name: Downloading binaries
+      get_url:
+        url: "{{ consul_url }}"
+        dest: "/tmp/{{ consul_zip }}"
+        mode:  "{{ consul_mode }}"
+
+    - name: Install Binaries
+      ansible.builtin.unarchive:
+        src: "/tmp/{{ consul_zip }}"
+        dest: "{{ consul_dir }}"
+        mode: 0755
+        owner: "{{ consul_user }}"
+        group: "{{ consul_group }}"
+        remote_src: yes
+    
+    - name: Test Installation
+      shell: |
+        consul --version
+      register: test_consul
+    
+    - debug:
+        msg: "This is consul version: {{ test_consul.stdout }}"
+    
+    # - name: Auto Complete 
+    #   shell: |
+    #     consul -autocomplete-install
+    #     complete -C /usr/bin/consul consul
+    
+    - name: Insert Run Consul script
+      ansible.builtin.copy:
+        src: files/run-consul
+        dest: "{{ consul_dir }}/run-consul"
+        owner: "{{consul_user}}"
+        group: "{{consul_group}}"
+        mode: 0755

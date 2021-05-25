@@ -1,0 +1,6 @@
+---
+- name: Install packages
+  apt:
+    name: "{{ consul_dependecies_packages }}"
+    state: present
+    update_cache: yes

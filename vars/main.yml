@@ -1,17 +1,32 @@
 ---
 # vars file for consul_install
-consul_version: 1.7.1
+consul_version: 1.8.0
+consul_default_path: /opt/consul/
 consul_zip: "consul_{{ consul_version }}_linux_amd64.zip"
 consul_url: "https://releases.hashicorp.com/consul/{{ consul_version }}/{{ consul_zip }}"
 consul_dir: /usr/local/bin
 consul_path: "{{ consul_dir }}/consul"
+consul_home: /etc/consul.d
 consul_config_dir: /etc/consul.d
-consul_data_dir: /opt/consul/data
-consul_tls_dir: /opt/consul/tls
-consul_env_vars: "{{ consul_config_dir }}/consul.conf"
+consul_data_dir: "{{consul_default_path }}/data"
+consul_tls_dir: "{{consul_default_path }}/tls"
+consul_tls_ca_dir: "{{consul_default_path }}/tls/ca"
+# consul_env_vars: "{{ consul_config_dir }}/consul.conf"
+consul_hcl_file: "consul.hcl"
+consul_server_hcl_file: "server.hcl"
 consul_profile_script: /etc/profile.d/consul.sh
 consul_user: consul
 consul_group: consul
 consul_mode: 0644
 
+consul_retry_join: provider=aws tag_key=consul-cluster-name tag_value=##CONSUL_CLUSTER_NAME##
+consul_datacenter: queima
+
+
 systemd_path: /etc/systemd/system
+
+consul_dependecies_packages:
+- awscli
+- curl
+- unzip
+- jq

@@ -21,6 +21,13 @@ ubuntu:
     - dnsutils 
     - dnsmasq-base 
     - dnsmasq
+    - ruby
+    - rubygems
+    - ntp
+    - git
+    - npm 
+    - nginx
+    # - nodejs-legacy
 
 python:
   enabled: True
@@ -31,3 +38,4 @@ python:
   requirements:
     - pip
     - anisble
+    - awscli

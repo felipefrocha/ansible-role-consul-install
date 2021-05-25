@@ -1,0 +1,23 @@
+---
+- name: Pre requirements
+  block:
+    - name: "Ensure {{consul_group}} Groups exists"
+      ansible.builtin.group:
+        name: "{{ consul_group }}"
+        system: yes
+        state: present
+
+    - name: "Ensures {{ consul_user }} User Exists"
+      ansible.builtin.user:
+        name: "{{ consul_user }}"
+        create_home: yes
+        home: "{{ consul_home }}"
+        shell: /bin/bash
+        groups: 
+          - "{{ consul_group }}"
+          - sudo
+        state: present
+        system: yes
+        expires: -1
+
+      

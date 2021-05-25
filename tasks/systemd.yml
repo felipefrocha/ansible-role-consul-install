@@ -1,0 +1,10 @@
+---
+- name: Configure Systemd
+  block: 
+    - name: Copy Systemd File config
+      ansible.builtin.template:
+        src: "consul.service.j2"
+        dest: "{{systemd_path}}/consul.service"
+        owner: "{{consul_user}}"
+        group: "{{consul_group}}"
+        mode: '0644'

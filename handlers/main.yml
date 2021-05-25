@@ -1,2 +1,7 @@
 ---
 # handlers file for vault_install
+- name: Enable consul systemd
+  ansible.builtin.systemd:
+    name: consul
+    state: started
+    enabled: yes

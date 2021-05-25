@@ -1,0 +1,23 @@
+---
+# - name: Consul config resolv
+#   ansible.builtin.lineinfile:
+#     path: /etc/resolv.conf
+#     regexp: '# This file is'
+#     line: nameserver 127.0.0.1
+#     state: present
+#   become: yes
+
+    
+# - name: Consul config profile addr
+#   lineinfile:
+#     path: "{{ consul_profile_script }}"
+#     state: present
+#     regexp: '^export CONSUL_HTTP_ADDR.*'
+#     line: export CONSUL_HTTP_ADDR=http://127.0.0.1:8500
+
+# - name: Consul config dnsmasq
+#   lineinfile:
+#     path: /etc/dnsmaq.d/consul
+#     state: present
+#     regexp: '^server.*'
+#     line: 'server=/consul/127.0.0.1#8600'

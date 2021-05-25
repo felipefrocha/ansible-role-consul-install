@@ -1,0 +1,63 @@
+---
+- name: Prapare Consul
+  block:
+    - name: Create Consul directories if they do not exist
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: directory
+        owner: "{{ consul_user }}"
+        group: "{{ consul_group }}"
+        mode: '0644'
+        recurse: yes
+      loop: 
+        - "{{ consul_config_dir }}"
+        - "{{ consul_data_dir }}"
+        - "{{ consul_tls_dir }}"
+
+    - name: Ensure Consul files
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: touch
+        owner: "{{ consul_user }}"
+        group: "{{ consul_group }}"
+        mode: '0644'
+      loop:
+        # - "{{ consul_env_vars }}"
+        - "{{ consul_profile_script }}"
+        - /etc/sudoers.d/consul
+        # - /etc/dnsmaq.d/consul
+
+    - name: Ensure Consul HCL File
+      ansible.builtin.template:
+        src: "{{ item }}.j2"
+        dest: "{{ consul_config_dir }}/{{ item }}"
+        owner: "{{ consul_user }}"
+        group: "{{ consul_group }}"
+        mode: '0640'
+      loop:
+        - "{{ consul_hcl_file }}"
+        - "{{ consul_server_hcl_file }}"
+
+    # - name: Create ACL token
+    #   shell: consul keygen 
+    #   register: consul_token
+    
+    # - name: Insert ACL token
+    #   shell: "echo encrypt = {{ consul_token.stdout }} >> {{ consul_hcl_file }}"
+
+            
+    - name: Consul config sudoers
+      lineinfile:
+        path: /etc/sudoers.d/consul
+        state: present
+        regexp: 'consul ALL=(ALL).*'
+        line: 'consul ALL=(ALL) NOPASSWD: /usr/bin/echo, /usr/bin/tee, /usr/bin/cat, /usr/bin/sed, /usr/bin/systemctl'
+
+
+    - name: Run Consul Script
+      ansible.builtin.copy:
+        src: files/run-consul
+        dest: /usr/local/bin/run-consul
+        owner: "{{ consul_user }}"
+        group: "{{ consul_group }}"
+        mode: '0640'
